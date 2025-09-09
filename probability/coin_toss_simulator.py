@@ -5,9 +5,7 @@ class CoinTossSimulator:
         random_values = np.random.random(n_tosses)
         tosses = random_values < bias
         heads_count = np.sum(tosses)
-        print("head_count")
-        print(heads_count)
-        print(tosses)
+      
         proportion = heads_count / n_tosses
 
         return {
@@ -51,10 +49,48 @@ class CoinTossSimulator:
                 'proportions': proportions,
                 'true_bias': bias
           }
+    
+    def central_limit_demo(self, sample_size:int = 100,  n_experiments:int = 1000, bias:float=0.5) -> dict: 
+        """
+            Demonstrate Central Limit Theorem with coin tosses.
+            
+            Args:
+                sample_size: Number of tosses per experiment
+                n_experiments: Number of experiments to run  
+                bias: Coin bias
+                
+            Returns:
+                dict with sample means and theoretical predictions
+        """
+
+        sample_means = []
+        for i in range(n_experiments):
+            experiment_result = self.single_experiment(sample_size,bias)
+            proportion = experiment_result['proportion']
+            sample_means.append(proportion)
+
+        theoretical_mean = bias
+        theoretical_std = np.sqrt(bias * (1 - bias) / sample_size)
+
+        return {
+            'sample_means': sample_means,
+            'theoretical_mean': theoretical_mean,
+            'theoretical_std': theoretical_std,
+            'sample_size': sample_size,
+            'n_experiments': n_experiments
+        }
+
+    
 simulator = CoinTossSimulator()
 # simulator.demonstrate_law_of_large_numbers()
 # simulator.single_experiment(100)
-result = simulator.convergence_study(max_tosses=100, bias=0.7, step_size=10)
-print("Sample sizes:", result['sample_sizes'])
-print("Proportions:", result['proportions'])
+# result = simulator.convergence_study(max_tosses=100, bias=0.7, step_size=10)
+# print("Sample sizes:", result['sample_sizes'])
+# print("Proportions:", result['proportions'])
+
+
+result = simulator.central_limit_demo(sample_size=100, n_experiments=10, bias=0.7)
+print("Sample means:", result['sample_means'])
+print("Should center around:", result['theoretical_mean'])
+print("Standard deviation:", result['theoretical_std'])
 
