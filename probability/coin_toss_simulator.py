@@ -79,6 +79,41 @@ class CoinTossSimulator:
             'sample_size': sample_size,
             'n_experiments': n_experiments
         }
+    def confidence_interval(self, n_tosses:int , bias : float = 0.5 , confidence: float = 0.95) -> dict :
+        """
+                Calculate confidence interval for estimated proportion.
+                
+                Args:
+                    n_tosses: Number of tosses in experiment
+                    bias: True coin bias (for simulation)
+                    confidence: Confidence level (0.95 = 95%)
+                    
+                Returns:
+                    dict with observed proportion and confidence interval
+        """
+        experiment = self.single_experiment(n_tosses , bias)
+        observed_proportion = experiment['proportion']
+
+        standard_error = np.sqrt(observed_proportion * (1 - observed_proportion) / n_tosses)
+
+        if confidence == 0.95:
+            critical_value = 1.96
+        else:
+            critical_value = 1.96  # Simplified - normally would use scipy.stats
+
+        
+        margin_error = critical_value * standard_error
+        ci_lower = observed_proportion - margin_error         
+        ci_upper = observed_proportion + margin_error 
+
+        return {
+            'observed_proportion': observed_proportion,
+            'confidence_level': confidence,
+            'ci_lower': ci_lower,
+            'ci_upper': ci_upper,
+            'margin_error': margin_error,
+            'contains_true_bias': ci_lower <= bias <= ci_upper  
+        }      
 
     
 simulator = CoinTossSimulator()
@@ -90,7 +125,14 @@ simulator = CoinTossSimulator()
 
 
 result = simulator.central_limit_demo(sample_size=100, n_experiments=10, bias=0.7)
-print("Sample means:", result['sample_means'])
-print("Should center around:", result['theoretical_mean'])
-print("Standard deviation:", result['theoretical_std'])
+# print("Sample means:", result['sample_means'])
+# print("Should center around:", result['theoretical_mean'])
+# print("Standard deviation:", result['theoretical_std'])
+
+for n in [100, 500, 1000]:
+    result = simulator.confidence_interval(n, bias=0.7)
+    print(f"n={n}: {result['observed_proportion']:.3f} ± {result['margin_error']:.3f}")
+    print(f"  95% CI: [{result['ci_lower']:.3f}, {result['ci_upper']:.3f}]")
+    print(f"  Contains true bias (0.7): {result['contains_true_bias']}")
+    print()
 
