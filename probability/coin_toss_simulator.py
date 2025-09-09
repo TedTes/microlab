@@ -16,6 +16,15 @@ class CoinTossSimulator:
             'n_tosses': n_tosses
         }
 
+    def demonstrate_law_of_large_numbers(self):
+        print("Law of Large Numbers Demo:")
+        print("Sample Size -> Proportion -> Error")
+        for bias in [0.5, 0.7]:
+            print(f'for bias {bias}')
+            for n_tosses in [10, 50, 100, 500, 1000, 5000,10000,20000]:
+                result = self.single_experiment(n_tosses,bias)
+                error = abs(result['proportion'] - bias)
+                print(f"{n_tosses:4d} -> {result['proportion']:.3f} -> {error:.3f}")
 
-result = CoinTossSimulator().single_experiment(100)
-print(result)
+simulator = CoinTossSimulator()
+simulator.demonstrate_law_of_large_numbers()
