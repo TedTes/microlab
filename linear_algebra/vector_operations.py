@@ -71,8 +71,28 @@ class VectorOperations():
         cosine_sim = dot_prod / (mag_a * mag_b)
 
         return cosine_sim
+    def angle_between_vectors(self, vector_a:np.ndarray, vector_b:np.ndarray, degrees:bool=True) -> float:
 
+        """
+        Calculate angle between two vectors.
+        
+        Args:
+            vector_a: First vector
+            vector_b: Second vector
+            degrees: Return angle in degrees (True) or radians (False)
+            
+        Returns:
+            Angle between vectors
+        """
+        cos_sim = self.cosine_similarity(vector_a, vector_b)
+        cos_sim = np.clip(cos_sim, -1.0, 1.0)
+        angle_radians = np.arccos(cos_sim)
 
+        if degrees:
+            angle_result=np.degrees(angle_radians)
+        else:
+            angle_result = angle_radians
+        return angle_result
 
 vector_ops = VectorOperations()
 a = np.array([1, 2, 3])
@@ -109,3 +129,17 @@ print(vector_ops.cosine_similarity(a, b))
 a = np.array([1, 0])
 b = np.array([0, 1])
 print(vector_ops.cosine_similarity(a, b))
+print("#### angle test#####")
+# Same direction (should give 0°)
+a = np.array([1, 1])
+b = np.array([2, 2])  # Same direction, different magnitude
+print(vector_ops.angle_between_vectors(a, b)) 
+
+# Perpendicular vectors (should give 90°)
+a = np.array([1, 0])
+b = np.array([0, 1])
+print(vector_ops.angle_between_vectors(a, b))
+# Opposite direction (should give 180°)
+a = np.array([1, 0])
+b = np.array([-1, 0])
+print(vector_ops.angle_between_vectors(a, b))
