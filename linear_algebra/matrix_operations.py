@@ -21,6 +21,22 @@ class MatrixOperations():
 
         return result
 
+    def determinant(self, matrix:np.ndarray) -> float:
+        """
+        Calculate the determinant of a square matrix.
+
+        Args:
+        matrix: Square matrix (n × n)
+
+        Returns:
+        Determinant value
+        """
+        # validation 
+        if matrix.shape[0] != matrix.shape[1]:
+            raise ValueError("Determinant only defined for square matrices")
+        det_value = np.linalg.det(matrix)
+        return det_value
+
 
 matrix_ops = MatrixOperations()
 
@@ -42,3 +58,25 @@ weights = np.array([[0.1, 0.4],
 
 output = matrix_ops.matrix_multiply(inputs, weights)
 print(f"Neural network output: {output}")
+
+
+# Test 1: Identity matrix (should give 1.0)
+I = np.array([[1, 0], 
+              [0, 1]])
+print(f"Identity det: {matrix_ops.determinant(I)}")
+
+# Test 2: Singular matrix (should give 0.0)
+singular = np.array([[1, 2], 
+                     [2, 4]])  # Second row = 2 × first row
+print(f"Singular det: {matrix_ops.determinant(singular)}") 
+
+# Test 3: Regular matrix
+A = np.array([[1, 2], 
+              [3, 4]])
+print(f"Regular det: {matrix_ops.determinant(A)}")
+
+# Test 4: 3×3 matrix
+B = np.array([[1, 0, 2], 
+              [0, 1, 3], 
+              [0, 0, 1]])
+print(f"3×3 det: {matrix_ops.determinant(B)}") 
