@@ -33,6 +33,19 @@ class VectorOperations():
         dot_product_result = np.dot(vector_a, vector_b)
 
         return dot_product_result
+    def magnitude(self, vector:np.ndarray) -> float:
+        """
+        Calculate the magnitude (length) of a vector.
+
+        Args:
+            vector: Input vector
+            
+        Returns:
+            Magnitude of the vector
+        """
+        magnitude_result = np.linalg.norm(vector)
+
+        return magnitude_result
 
 
 
@@ -43,3 +56,14 @@ b = np.array([4, 5, 6])
 result = vector_ops.dot_product(a,b)
 print("dot product result")
 print(result)
+
+v = np.array([3, 4])
+result = vector_ops.magnitude(v)
+print("2d vector magnitude")
+print(result)
+
+# Test with 3D vector
+v2 = np.array([1, 2, 2])  
+result2 = vector_ops.magnitude(v2)
+print("3d vector magnitude")
+print(result2)
