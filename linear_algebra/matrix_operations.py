@@ -36,7 +36,28 @@ class MatrixOperations():
             raise ValueError("Determinant only defined for square matrices")
         det_value = np.linalg.det(matrix)
         return det_value
+    def matrix_inverse(self, matrix:np.ndarray) -> np.ndarray :
+        """
+        Calculate the inverse of a square matrix.
 
+        Args:
+        matrix: Square matrix (n × n)
+
+        Returns:
+        Inverse matrix
+
+        Raises:
+        ValueError: If matrix is singular (det = 0)
+        """
+        if matrix.shape[0] != matrix.shape[1]:
+            raise ValueError("Inverse only defined for square matrices")
+        
+        det_val = self.determinant(matrix)
+        if abs(det_val)  < 1e-10:
+            raise ValueError("Matrix is singular (determinant ≈ 0), cannot invert")
+        inverse_matrix = np.linalg.inv(matrix)
+
+        return inverse_matrix
 
 matrix_ops = MatrixOperations()
 
@@ -80,3 +101,30 @@ B = np.array([[1, 0, 2],
               [0, 1, 3], 
               [0, 0, 1]])
 print(f"3×3 det: {matrix_ops.determinant(B)}") 
+
+
+print("matrix inverse test")
+
+# Test 1: Simple 2×2 matrix
+A = np.array([[1, 2], 
+              [3, 4]])
+A_inv = matrix_ops.matrix_inverse(A)
+print("A inverse:", A_inv)
+
+# Test the inverse property: A @ A_inv should equal identity
+identity_check = A @ A_inv
+print("A @ A_inv:", identity_check)  # Should be [[1,0], [0,1]]
+
+# Test 2: Identity matrix (inverse of identity is identity)
+I = np.array([[1, 0], 
+              [0, 1]])
+I_inv = matrix_ops.matrix_inverse(I)
+print("Identity inverse:", I_inv)  # Should be [[1,0], [0,1]]
+
+# Test 3: Try singular matrix (should raise error)
+try:
+    singular = np.array([[1, 2], 
+                         [2, 4]])
+    matrix_ops.matrix_inverse(singular)
+except ValueError as e:
+    print("Expected error:", e)
