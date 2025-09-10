@@ -47,6 +47,31 @@ class VectorOperations():
 
         return magnitude_result
 
+    def cosine_similarity(self, vector_a: np.ndarray, vector_b:np.ndarray) -> float:
+        """
+        Calculate cosine similarity between two vectors.
+        
+        Formula: cos(θ) = (A · B) / (|A| × |B|)
+        
+        Args:
+            vector_a: First vector
+            vector_b: Second vector
+            
+        Returns:
+            Cosine similarity (-1 to 1)
+        """
+
+        dot_prod = self.dot_product(vector_a, vector_b)
+        mag_a = self.magnitude(vector_a)
+        mag_b = self.magnitude(vector_b)
+
+        if mag_a == 0  or mag_b == 0:
+            return 0.0
+
+        cosine_sim = dot_prod / (mag_a * mag_b)
+
+        return cosine_sim
+
 
 
 vector_ops = VectorOperations()
@@ -67,3 +92,20 @@ v2 = np.array([1, 2, 2])
 result2 = vector_ops.magnitude(v2)
 print("3d vector magnitude")
 print(result2)
+
+
+print("##### cosine similarity ####")
+# Identical vectors (should give 1.0)
+a = np.array([1, 2, 3])
+b = np.array([1, 2, 3])
+print(vector_ops.cosine_similarity(a, b))
+
+# Opposite vectors (should give -1.0)
+a = np.array([1, 2, 3])
+b = np.array([-1, -2, -3])  
+print(vector_ops.cosine_similarity(a, b)) 
+
+# Perpendicular vectors (should give 0.0)
+a = np.array([1, 0])
+b = np.array([0, 1])
+print(vector_ops.cosine_similarity(a, b))
