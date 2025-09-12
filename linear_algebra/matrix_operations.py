@@ -72,6 +72,19 @@ class MatrixOperations():
 
         return transposed
 
+    def matrix_rank(self,matrix:np.ndarray)->int:
+        """
+        Calculate the rank of a matrix.
+
+        Args:
+        matrix: Input matrix (m × n)
+
+        Returns:
+        Rank of the matrix (integer)
+        """
+        rank = np.linalg.matrix_rank(matrix)
+        return rank
+
 
 
 matrix_ops = MatrixOperations()
@@ -150,3 +163,33 @@ print("Original shape:", A.shape)
 print("Transposed shape:", A_T.shape)
 print("Transposed:")
 print(A_T)
+
+
+print("#############MATRIX RANK ################")
+# Test 1: Full rank matrix
+A = np.array([[1, 2],
+              [3, 4]])
+rank_A = matrix_ops.matrix_rank(A)
+print(f"Full rank 2×2 matrix rank: {rank_A}")  # Should be 2
+
+# Test 2: Rank deficient matrix (dependent rows)
+B = np.array([[1, 2],
+              [2, 4]])  # Second row = 2 × first row
+rank_B = matrix_ops.matrix_rank(B)
+print(f"Rank deficient matrix rank: {rank_B}")  # Should be 1
+
+# Test 3: Zero matrix
+C = np.zeros((3, 3))
+rank_C = matrix_ops.matrix_rank(C)
+print(f"Zero matrix rank: {rank_C}")  # Should be 0
+
+# Test 4: Rectangular matrix
+D = np.array([[1, 2, 3],
+              [4, 5, 6]])
+rank_D = matrix_ops.matrix_rank(D)
+print(f"2×3 matrix rank: {rank_D}")  # Should be 2
+
+# Test 5: Identity matrix
+I = np.eye(3)
+rank_I = matrix_ops.matrix_rank(I)
+print(f"3×3 identity matrix rank: {rank_I}")  # Should be 3
