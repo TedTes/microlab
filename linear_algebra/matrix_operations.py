@@ -58,6 +58,21 @@ class MatrixOperations():
         inverse_matrix = np.linalg.inv(matrix)
 
         return inverse_matrix
+    def matrix_transpose(self, matrix:np.ndarray) -> np.ndarray:
+        """
+        Calculate the transpose of a matrix.
+
+        Args:
+        matrix: Input matrix (m × n)
+
+        Returns:
+        Transposed matrix (n × m)
+        """
+        transposed = matrix.T  # or  np.transpose(matrix)
+
+        return transposed
+
+
 
 matrix_ops = MatrixOperations()
 
@@ -65,6 +80,10 @@ A = np.array([[1, 2],
               [3, 4]])
 B = np.array([[5, 6], 
               [7, 8]])
+
+C = np.array([[1, 0, 2], 
+              [0, 1, 3], 
+              [0, 0, 1]])
 
 result = matrix_ops.matrix_multiply(A,B)
 print("matrix multiplication result")
@@ -92,22 +111,17 @@ singular = np.array([[1, 2],
 print(f"Singular det: {matrix_ops.determinant(singular)}") 
 
 # Test 3: Regular matrix
-A = np.array([[1, 2], 
-              [3, 4]])
 print(f"Regular det: {matrix_ops.determinant(A)}")
 
 # Test 4: 3×3 matrix
-B = np.array([[1, 0, 2], 
-              [0, 1, 3], 
-              [0, 0, 1]])
-print(f"3×3 det: {matrix_ops.determinant(B)}") 
+
+print(f"3×3 det: {matrix_ops.determinant(C)}") 
 
 
 print("matrix inverse test")
 
 # Test 1: Simple 2×2 matrix
-A = np.array([[1, 2], 
-              [3, 4]])
+
 A_inv = matrix_ops.matrix_inverse(A)
 print("A inverse:", A_inv)
 
@@ -128,3 +142,11 @@ try:
     matrix_ops.matrix_inverse(singular)
 except ValueError as e:
     print("Expected error:", e)
+
+
+print("transpose of A")
+A_T = matrix_ops.matrix_transpose(A)
+print("Original shape:", A.shape)
+print("Transposed shape:", A_T.shape)
+print("Transposed:")
+print(A_T)
