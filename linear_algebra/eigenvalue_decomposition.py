@@ -19,6 +19,47 @@ class EigenValueDecompositionOperations:
         return eigenvalues, eigenvectors
 
 
+    def principal_components(self, data:np.ndarray, n_components:int = None) -> dict:
+        """
+        Perform Principal Component Analysis (PCA).
+
+        Args:
+        data: Data matrix (samples × features)
+        n_components: Number of components to keep (None = all)
+
+        Returns:
+        dict with 'components', 'eigenvalues', 'explained_variance_ratio'
+        """
+
+        # Step 1: Center data
+        data_centered = data - np.mean(data, axis=0)
+
+        # Step 2: Covariance matrix  
+        cov_matrix = np.cov(data_centered.T)
+
+        # Step 3: Eigendecomposition
+        eigenvals, eigenvecs = self.eigenvalue_decomposition(cov_matrix)
+
+        # Step 4: Sort descending
+        sort_indices = np.argsort(eigenvals)[::-1]
+
+        #  Step 5: Keep only n_components
+        if n_components is not None:
+            eigenvals_sorted = eigenvals_sorted[:n_components]
+            eigenvecs_sorted = eigenvecs_sorted[:, :n_components]
+
+        # Step 6: Explained variance
+        total_variance = np.sum(eigenvals_sorted)
+        explained_variance_ratio = eigenvals_sorted / total_variance
+
+
+        return {
+            'components': eigenvecs_sorted,           # Principal components
+            'eigenvalues': eigenvals_sorted,          # Importance scores
+            'explained_variance_ratio': explained_variance_ratio,  # Percentage explained
+            'data_centered': data_centered            # For transformations
+        }
+
 
 
 eigen_ops = EigenValueDecompositionOperations()
